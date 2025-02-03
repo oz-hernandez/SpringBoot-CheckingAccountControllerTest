@@ -1,6 +1,8 @@
 package com.oz.CheckingAccount.Accounts;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 import java.math.BigDecimal;
@@ -9,13 +11,30 @@ import java.math.BigDecimal;
 public class Account {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
     private BigDecimal balance;
 
     public Account() {}
-    public Account(Long id, String name, BigDecimal balance) {
-        this.id = id;
+
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Account(String name, BigDecimal balance) {
         this.name = name;
         this.balance = balance;
     }
