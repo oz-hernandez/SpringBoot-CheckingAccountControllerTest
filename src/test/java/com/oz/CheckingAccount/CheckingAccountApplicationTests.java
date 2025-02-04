@@ -47,4 +47,10 @@ class CheckingAccountApplicationTests {
 		Double balance = doc.read("$.balance");
 		assertThat(balance).isEqualTo(350.99);
 	}
+
+	@Test
+	void accountDoesntExist() {
+		ResponseEntity<Account> res = restTemplate.getForEntity("/accounts/tim", Account.class);
+		assertThat(res.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+	}
 }

@@ -20,7 +20,10 @@ public class AccountController {
     @GetMapping("/{name}")
     private ResponseEntity<Account> getAccountByName(@PathVariable String name) {
         Account account = accountRepository.findByName(name);
-        return ResponseEntity.ok(account);
+        if(account != null) {
+            return ResponseEntity.ok(account);
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping
