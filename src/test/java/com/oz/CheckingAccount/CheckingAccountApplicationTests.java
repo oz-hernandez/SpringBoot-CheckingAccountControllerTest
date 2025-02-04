@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -53,5 +55,25 @@ class CheckingAccountApplicationTests {
 	void accountDoesntExist() {
 		ResponseEntity<Account> res = restTemplate.getForEntity("/accounts/99", Account.class);
 		assertThat(res.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+	}
+
+	@Test
+	void updateAccountBalance() {
+		Account account = new Account("tim", BigDecimal.valueOf(126.00));
+		URI location = restTemplate.postForLocation("/accounts", account);
+
+		Account updateAccount = new Account(account.getId(), "tim", BigDecimal.valueOf(200.00));
+		HttpEntity<Account> request = new HttpEntity<>(updateAccount);
+
+		ResponseEntity<Void> response = restTemplate.exchange(location, HttpMethod.PUT, request, Void.class);
+
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+		ResponseEntity<String> res = restTemplate.getForEntity(location, String.class);
+		assertThat(res.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+		DocumentContext doc = JsonPath.parse(res.getBody());
+		Double balance = doc.read("$.balance");
+		assertThat(balance).isEqualTo(326.00);
 	}
 }

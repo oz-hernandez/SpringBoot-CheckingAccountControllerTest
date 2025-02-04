@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.Optional;
 
@@ -35,5 +36,17 @@ public class AccountController {
                 .buildAndExpand(newAccount.getId())
                 .toUri();
         return ResponseEntity.created(location).build();
+    }
+
+    @PutMapping("/{id}")
+    private ResponseEntity<Void> updateAccount(@PathVariable Long id, @RequestBody Account account) {
+        Optional<Account> updatedAccount = accountRepository.findById(id);
+
+        if(updatedAccount.isPresent()) {
+            updatedAccount.get().setBalance(updatedAccount.get().getBalance().add(account.getBalance()));
+            accountRepository.save(updatedAccount.get());
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 }
