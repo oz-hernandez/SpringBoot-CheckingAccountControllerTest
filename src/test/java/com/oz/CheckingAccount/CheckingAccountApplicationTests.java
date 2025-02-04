@@ -34,7 +34,8 @@ class CheckingAccountApplicationTests {
 		ResponseEntity<Void> response = restTemplate.postForEntity("/accounts", account, Void.class);
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
-		ResponseEntity<String> responseAccount = restTemplate.getForEntity("/accounts/oz", String.class);
+		URI location = response.getHeaders().getLocation();
+		ResponseEntity<String> responseAccount = restTemplate.getForEntity(location, String.class);
 		assertThat(responseAccount.getStatusCode()).isEqualTo(HttpStatus.OK);
 
 		DocumentContext doc = JsonPath.parse(responseAccount.getBody());
@@ -50,7 +51,7 @@ class CheckingAccountApplicationTests {
 
 	@Test
 	void accountDoesntExist() {
-		ResponseEntity<Account> res = restTemplate.getForEntity("/accounts/tim", Account.class);
+		ResponseEntity<Account> res = restTemplate.getForEntity("/accounts/99", Account.class);
 		assertThat(res.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 	}
 }

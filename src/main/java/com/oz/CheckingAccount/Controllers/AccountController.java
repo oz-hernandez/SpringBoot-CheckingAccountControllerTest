@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/accounts")
@@ -17,11 +18,11 @@ public class AccountController {
         this.accountRepository = accountRepository;
     }
 
-    @GetMapping("/{name}")
-    private ResponseEntity<Account> getAccountByName(@PathVariable String name) {
-        Account account = accountRepository.findByName(name);
-        if(account != null) {
-            return ResponseEntity.ok(account);
+    @GetMapping("/{id}")
+    private ResponseEntity<Account> getAccountByName(@PathVariable Long id) {
+        Optional<Account> account = accountRepository.findById(id);
+        if(account.isPresent()) {
+            return ResponseEntity.ok(account.get());
         }
         return ResponseEntity.notFound().build();
     }
