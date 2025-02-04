@@ -3,10 +3,7 @@ package com.oz.CheckingAccount.Controllers;
 import com.oz.CheckingAccount.Accounts.Account;
 import com.oz.CheckingAccount.Accounts.AccountRepository;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -18,6 +15,12 @@ public class AccountController {
 
     private AccountController(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
+    }
+
+    @GetMapping("/{name}")
+    private ResponseEntity<Account> getAccountByName(@PathVariable String name) {
+        Account account = accountRepository.findByName(name);
+        return ResponseEntity.ok(account);
     }
 
     @PostMapping
