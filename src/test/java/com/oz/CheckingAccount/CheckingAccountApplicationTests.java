@@ -66,7 +66,6 @@ class CheckingAccountApplicationTests {
 		HttpEntity<Account> request = new HttpEntity<>(updateAccount);
 
 		ResponseEntity<Void> response = restTemplate.exchange(location, HttpMethod.PUT, request, Void.class);
-
 		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
 		ResponseEntity<String> res = restTemplate.getForEntity(location, String.class);
@@ -74,6 +73,15 @@ class CheckingAccountApplicationTests {
 
 		DocumentContext doc = JsonPath.parse(res.getBody());
 		Double balance = doc.read("$.balance");
+		assertThat(balance).isEqualTo(326.00);
+
+		Account updateAccountNegative = new Account(account.getId(), "tim", BigDecimal.valueOf(-200.00));
+		request = new HttpEntity<>(updateAccountNegative);
+		restTemplate.exchange(location, HttpMethod.PUT, request, Void.class);
+
+		ResponseEntity<String> res2 = restTemplate.getForEntity(location, String.class);
+		doc = JsonPath.parse(res2.getBody());
+		balance = doc.read("$.balance");
 		assertThat(balance).isEqualTo(326.00);
 	}
 }

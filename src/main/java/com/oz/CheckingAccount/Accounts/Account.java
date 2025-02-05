@@ -23,6 +23,9 @@ public class Account {
     }
 
     public void setBalance(BigDecimal balance) {
+        if(balance.compareTo(BigDecimal.ZERO) < 0) {
+            return;
+        }
         this.balance = balance;
     }
 
