@@ -19,7 +19,7 @@ public class AccountController {
     }
 
     @GetMapping("/{id}")
-    private ResponseEntity<Account> getAccountByName(@PathVariable Long id) {
+    private ResponseEntity<Account> getAccountById(@PathVariable Long id) {
         Optional<Account> account = accountRepository.findById(id);
         if(account.isPresent()) {
             return ResponseEntity.ok(account.get());
